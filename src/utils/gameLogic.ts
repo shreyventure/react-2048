@@ -53,6 +53,7 @@ const getVector = (direction: string) => {
 };
 
 export function updateGrid(grid: number[][], direction: string, size: number) {
+  let score = 0;
   console.log("Updating table:");
   console.table(grid);
   const newGrid = grid.map((row) => [...row]);
@@ -101,6 +102,7 @@ export function updateGrid(grid: number[][], direction: string, size: number) {
       ) {
         // Merge tiles
         newGrid[newR + vector.y][newC + vector.x] *= 2;
+        score += newGrid[newR + vector.y][newC + vector.x];
         newGrid[r][c] = 0;
         merged[newR + vector.y][newC + vector.x] = true;
         moved = true;
@@ -113,16 +115,16 @@ export function updateGrid(grid: number[][], direction: string, size: number) {
     }
   }
 
+  console.log("Score:", score);
   if (moved) {
     console.table(newGrid);
     const { newGrid: withNewTile, gameOver, won } = spawnTile(newGrid);
-    return { newGrid: withNewTile, gameOver, won };
+    return { newGrid: withNewTile, gameOver, won, currentScore: score };
   }
-
-  return { newGrid, gameOver: false, won: false };
+  return { newGrid, gameOver: false, won: false, currentScore: score };
 }
 
-const isGameTerminated = (
+export const isGameTerminated = (
   grid: number[][]
 ): { terminated: boolean; won: boolean } => {
   const size = grid.length;

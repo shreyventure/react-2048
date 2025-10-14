@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { createEmptyGrid, updateGrid } from "../utils/gameLogic";
+import {
+  createEmptyGrid,
+  updateGrid,
+  isGameTerminated,
+} from "../utils/gameLogic";
 
 const useGameBoard = () => {
   const [size, setSize] = useState(3);
@@ -12,11 +16,21 @@ const useGameBoard = () => {
     console.log("moving:", direction);
 
     setGrid((prevGrid) => {
-      const { newGrid, gameOver, won } = updateGrid(
+      let terminationState = isGameTerminated(grid);
+      console.log("Termination State:", terminationState);
+      if (terminationState.terminated) {
+        console.log("Game already terminated");
+        setGameTerminated(true);
+        setWon(terminationState.won);
+        return prevGrid;
+      }
+      const { newGrid, gameOver, won, currentScore } = updateGrid(
         prevGrid,
         direction,
         prevGrid.length
       );
+      console.log("Current Score:", currentScore);
+      setScore((prevScore) => prevScore + (currentScore ?? 0));
       console.log("New Grid:");
       console.table(newGrid);
       if (gameOver) {
@@ -27,11 +41,17 @@ const useGameBoard = () => {
         console.log("You won!");
         setWon(true);
       }
-      if (newGrid) setGrid(newGrid);
       return newGrid;
     });
 
     // setScore((prevScore) => prevScore + 1);
+  };
+
+  const restartGame = () => {
+    setGrid(createEmptyGrid(size));
+    setScore(0);
+    setGameTerminated(false);
+    setWon(false);
   };
 
   useEffect(() => {
@@ -63,6 +83,7 @@ const useGameBoard = () => {
     setScore,
     gameTerminated,
     won,
+    restartGame,
   };
 };
 

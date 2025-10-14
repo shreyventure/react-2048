@@ -4,7 +4,8 @@ import GameEndScreen from "./components/GameEndScreen";
 import useGameBoard from "./hooks/useGameBoard";
 
 function App() {
-  const { size, setSize, grid, score, gameTerminated, won } = useGameBoard();
+  const { size, setSize, grid, score, gameTerminated, won, restartGame } =
+    useGameBoard();
 
   const [showGameEndScreen, setShowGameEndScreen] = useState(false);
 
@@ -17,7 +18,11 @@ function App() {
   return (
     <div className="container">
       {showGameEndScreen && (
-        <GameEndScreen won={won} onClose={() => setShowGameEndScreen(false)} />
+        <GameEndScreen
+          won={won}
+          onClose={() => setShowGameEndScreen(false)}
+          restartGame={restartGame}
+        />
       )}
       <div className="heading">
         <h1 className="title">2048</h1>
@@ -30,7 +35,9 @@ function App() {
         <p className="game-intro">
           Join the numbers and get to the <strong>2048 tile!</strong>
         </p>
-        <a className="restart-button">New Game</a>
+        <button onClick={restartGame} className="restart-button">
+          New Game
+        </button>
       </div>
 
       <div className="border flex justify-between">
@@ -43,6 +50,7 @@ function App() {
           value={size}
           onChange={(e) => setSize(Number(e.target.value))}
         >
+          <option value={2}>2</option>
           <option value={3}>3</option>
           <option value={4}>4</option>
           <option value={5}>5</option>
@@ -66,8 +74,6 @@ function App() {
           ))}
         </div>
       </div>
-
-      {/* <button onClick={() => setScore((prev) => prev + 1)}>Reset Game</button> */}
     </div>
   );
 }
