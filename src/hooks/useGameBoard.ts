@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   createEmptyGrid,
   updateGrid,
-  isGameTerminated
+  isGameTerminated,
 } from "../utils/gameLogic";
 import { useSwipeGestures } from "./useSwipeGestures";
 
@@ -61,7 +61,7 @@ const useGameBoard = () => {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (gameTerminated) return;
-      
+
       e.preventDefault();
       if (e.key === "ArrowUp") move("up");
       else if (e.key === "ArrowDown") move("down");

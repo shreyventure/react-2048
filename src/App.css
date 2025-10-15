@@ -49,30 +49,7 @@ body::before {
   z-index: -1;
 }
 
-/* Dark mode styles */
-.dark body {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
 
-.dark .bg-\[#faf8ef\] {
-  background: #1a1a1a !important;
-}
-
-.dark .text-\[#776e65\] {
-  color: #e0e0e0 !important;
-}
-
-.dark .bg-\[#bbada0\] {
-  background: #4a4a4a !important;
-}
-
-.dark .bg-\[#8f7a66\] {
-  background: #6b5b4f !important;
-}
-
-.dark .hover\:bg-\[#9f8a76\]:hover {
-  background: #7b6b5f !important;
-}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

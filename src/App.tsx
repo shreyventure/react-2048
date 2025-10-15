@@ -6,7 +6,6 @@ import GameBoard from "./components/GameBoard";
 import ScoreBoard from "./components/ScoreBoard";
 import GameControls from "./components/GameControls";
 import KeyboardControls from "./components/KeyboardControls";
-import ThemeToggle from "./components/ThemeToggle";
 import useGameBoard from "./hooks/useGameBoard";
 
 function App() {
@@ -41,9 +40,7 @@ function App() {
   }, [score, bestScore]);
 
   return (
-    <div className="min-h-screen bg-[#faf8ef] py-8 px-4 relative">
-      <ThemeToggle />
-      
+    <div className="min-h-screen bg-[#faf8ef] py-8 px-4">
       {showGameEndScreen && (
         <GameEndScreen
           terminated={gameTerminated}
