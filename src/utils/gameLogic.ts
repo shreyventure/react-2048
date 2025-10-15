@@ -1,3 +1,22 @@
+export interface TileData {
+  id: string;
+  value: number;
+  row: number;
+  col: number;
+  isNew?: boolean;
+  isMerged?: boolean;
+  previousRow?: number;
+  previousCol?: number;
+}
+
+export const createTestGrid = (size: number): number[][] => {
+  let grid = Array.from({ length: size }, () => Array(size).fill(0));
+  grid[0][0] = 1024
+  grid[0][1] = 1024
+
+  return grid;
+};
+
 export const createEmptyGrid = (size: number): number[][] => {
   let grid = Array.from({ length: size }, () => Array(size).fill(0));
   grid = spawnTile(grid).newGrid;

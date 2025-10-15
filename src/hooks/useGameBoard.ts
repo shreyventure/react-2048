@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import {
   createEmptyGrid,
   updateGrid,
-  isGameTerminated,
+  isGameTerminated
 } from "../utils/gameLogic";
+import { useSwipeGestures } from "./useSwipeGestures";
 
 const useGameBoard = () => {
-  const [size, setSize] = useState(3);
-  const [grid, setGrid] = useState(createEmptyGrid(3));
+  const [size, setSize] = useState(4);
+  const [grid, setGrid] = useState(createEmptyGrid(4));
   const [score, setScore] = useState(0);
   const [gameTerminated, setGameTerminated] = useState(false);
   const [won, setWon] = useState(false);
@@ -16,7 +17,7 @@ const useGameBoard = () => {
     console.log("moving:", direction);
 
     setGrid((prevGrid) => {
-      let terminationState = isGameTerminated(grid);
+      let terminationState = isGameTerminated(prevGrid);
       console.log("Termination State:", terminationState);
       if (terminationState.terminated) {
         console.log("Game already terminated");
@@ -43,8 +44,6 @@ const useGameBoard = () => {
       }
       return newGrid;
     });
-
-    // setScore((prevScore) => prevScore + 1);
   };
 
   const restartGame = () => {
@@ -61,6 +60,8 @@ const useGameBoard = () => {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
+      if (gameTerminated) return;
+      
       e.preventDefault();
       if (e.key === "ArrowUp") move("up");
       else if (e.key === "ArrowDown") move("down");
@@ -71,16 +72,23 @@ const useGameBoard = () => {
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, []);
+  }, [gameTerminated]);
+
+  // Add swipe gesture support
+  useSwipeGestures({
+    onSwipe: (direction: string) => {
+      if (!gameTerminated) {
+        move(direction);
+      }
+    },
+  });
 
   return {
     size,
     setSize,
     grid,
-    setGrid,
     move,
     score,
-    setScore,
     gameTerminated,
     won,
     restartGame,

@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import "./App.css";
 import GameEndScreen from "./components/GameEndScreen";
+import GameBoard from "./components/GameBoard";
+import ScoreBoard from "./components/ScoreBoard";
+import GameControls from "./components/GameControls";
+import KeyboardControls from "./components/KeyboardControls";
+import ThemeToggle from "./components/ThemeToggle";
 import useGameBoard from "./hooks/useGameBoard";
 
 function App() {
-  const { size, setSize, grid, score, gameTerminated, won, restartGame } =
+  const { size, setSize, grid, score, gameTerminated, won, restartGame, move } =
     useGameBoard();
 
   const [showGameEndScreen, setShowGameEndScreen] = useState(false);
+  const [wonShow, setWonShow] = useState(false)
+  const [bestScore, setBestScore] = useState(() => {
+    const saved = localStorage.getItem('2048-best-score');
+    return saved ? parseInt(saved) : 0;
+  });
 
   useEffect(() => {
     if (gameTerminated) {
@@ -15,65 +26,72 @@ function App() {
     }
   }, [gameTerminated]);
 
+  useEffect(() => {
+    if (won && !wonShow) {
+      setShowGameEndScreen(true);
+      setWonShow(true)
+    }
+  }, [won]);
+
+  useEffect(() => {
+    if (score > bestScore) {
+      setBestScore(score);
+      localStorage.setItem('2048-best-score', score.toString());
+    }
+  }, [score, bestScore]);
+
   return (
-    <div className="container">
+    <div className="min-h-screen bg-[#faf8ef] py-8 px-4 relative">
+      <ThemeToggle />
+      
       {showGameEndScreen && (
         <GameEndScreen
+          terminated={gameTerminated}
           won={won}
           onClose={() => setShowGameEndScreen(false)}
           restartGame={restartGame}
         />
       )}
-      <div className="heading">
-        <h1 className="title">2048</h1>
-        <div className="scores-container">
-          <div className="score-container">{score}</div>
+      
+      <motion.div 
+        className="max-w-2xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+          <motion.h1 
+            className="text-5xl sm:text-7xl font-bold text-[#776e65] m-0"
+            initial={{ scale: 0.5 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            2048
+          </motion.h1>
+          <ScoreBoard score={score} bestScore={bestScore} />
         </div>
-      </div>
 
-      <div className="above-game">
-        <p className="game-intro">
-          Join the numbers and get to the <strong>2048 tile!</strong>
-        </p>
-        <button onClick={restartGame} className="restart-button">
-          New Game
-        </button>
-      </div>
+        {/* Game Controls */}
+        <GameControls 
+          onRestart={restartGame}
+          size={size}
+          onSizeChange={setSize}
+        />
 
-      <div className="border flex justify-between">
-        <label htmlFor="grid-size" className="p-2">
-          Grid Size:
-        </label>
-        <select
-          name="grid-size"
-          id="grid-size"
-          value={size}
-          onChange={(e) => setSize(Number(e.target.value))}
+        {/* Game Board */}
+        <motion.div
+          key={size} // Re-animate when size changes
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
         >
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option>
-          <option value={6}>6</option>
-        </select>
-      </div>
+          <GameBoard grid={grid} size={size} />
+        </motion.div>
 
-      <div className="game-container">
-        <div className="grid-container">
-          {grid.map((row, rowIndex) => (
-            // flex container for each row, with some padding between elements
-            <div key={rowIndex} className="grid-row">
-              {row.map((cell, cellIndex) => (
-                <div key={cellIndex} className="grid-cell">
-                  <div className={`tile tile-${cell}`}>
-                    <div className="tile-inner">{cell}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+        {/* Keyboard Controls */}
+        <KeyboardControls onMove={move} />
+      </motion.div>
     </div>
   );
 }
