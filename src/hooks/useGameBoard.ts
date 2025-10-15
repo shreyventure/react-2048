@@ -62,12 +62,21 @@ const useGameBoard = () => {
     const handleKey = (e: KeyboardEvent) => {
       if (gameTerminated) return;
 
-      e.preventDefault();
-      if (e.key === "ArrowUp") move("up");
-      else if (e.key === "ArrowDown") move("down");
-      else if (e.key === "ArrowLeft") move("left");
-      else if (e.key === "ArrowRight") move("right");
-      else return;
+      // Only handle arrow keys and prevent default only for them
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        move("up");
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        move("down");
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        move("left");
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        move("right");
+      }
+      // For all other keys, do nothing - let browser handle them normally
     };
 
     window.addEventListener("keydown", handleKey);
