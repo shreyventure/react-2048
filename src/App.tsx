@@ -14,9 +14,9 @@ function App() {
     useGameBoard();
 
   const [showGameEndScreen, setShowGameEndScreen] = useState(false);
-  const [wonShow, setWonShow] = useState(false)
+  const [wonShow, setWonShow] = useState(false);
   const [bestScore, setBestScore] = useState(() => {
-    const saved = localStorage.getItem('2048-best-score');
+    const saved = localStorage.getItem("2048-best-score");
     return saved ? parseInt(saved) : 0;
   });
 
@@ -29,21 +29,21 @@ function App() {
   useEffect(() => {
     if (won && !wonShow) {
       setShowGameEndScreen(true);
-      setWonShow(true)
+      setWonShow(true);
     }
   }, [won]);
 
   useEffect(() => {
     if (score > bestScore) {
       setBestScore(score);
-      localStorage.setItem('2048-best-score', score.toString());
+      localStorage.setItem("2048-best-score", score.toString());
     }
   }, [score, bestScore]);
 
   return (
-    <div className="min-h-screen bg-[#faf8ef] py-8 px-4 relative">
-      <HelpButton />
-      
+    <div className="h-screen bg-[#faf8ef] py-3 px-4 relative overflow-hidden">
+      {/* <HelpButton /> */}
+
       {showGameEndScreen && (
         <GameEndScreen
           terminated={gameTerminated}
@@ -52,45 +52,55 @@ function App() {
           restartGame={restartGame}
         />
       )}
-      
-      <motion.div 
-        className="max-w-2xl mx-auto"
+
+      <motion.div
+        className="h-full max-w-2xl mx-auto flex flex-col"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
-          <motion.h1 
-            className="text-5xl sm:text-7xl font-bold text-[#776e65] m-0"
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            2048
-          </motion.h1>
+        <div className="flex items-center justify-between mb-3 gap-2 flex-shrink-0">
+          <div className="flex items-center justify-between gap-2">
+            <motion.h1
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#776e65] m-0"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+
+              2048 
+            </motion.h1>
+            <HelpButton />
+          </div>
           <ScoreBoard score={score} bestScore={bestScore} />
         </div>
 
         {/* Game Controls */}
-        <GameControls 
-          onRestart={restartGame}
-          size={size}
-          onSizeChange={setSize}
-        />
+        <div className="mb-3 flex-shrink-0">
+          <GameControls
+            onRestart={restartGame}
+            size={size}
+            onSizeChange={setSize}
+          />
+        </div>
 
-        {/* Game Board */}
-        <motion.div
-          key={size} // Re-animate when size changes
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <GameBoard grid={grid} size={size} />
-        </motion.div>
+        {/* Game Board - Takes remaining space */}
+        <div className="flex-1 flex items-center justify-center min-h-0">
+          <motion.div
+            key={size} // Re-animate when size changes
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <GameBoard grid={grid} size={size} />
+          </motion.div>
+        </div>
 
         {/* Keyboard Controls */}
-        <KeyboardControls onMove={move} />
+        <div className="flex-shrink-0">
+          <KeyboardControls onMove={move} />
+        </div>
       </motion.div>
     </div>
   );

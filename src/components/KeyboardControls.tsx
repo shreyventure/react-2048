@@ -11,17 +11,17 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
   ];
 
   return (
-    <div className="mt-6">
-      <p className="text-center text-[#776e65] mb-4 font-medium">
-        Use arrow keys, WASD keys, or click the buttons below
+    <div className="mt-2">
+      <p className="text-center text-[#776e65] mb-2 font-medium text-sm">
+        Use arrow keys, WASD keys, or click buttons
       </p>
 
-      <div className="flex justify-center gap-2">
+      <div className="flex justify-center gap-2 mb-2">
         {controls.map(({ direction, icon, label }) => (
           <button
             key={direction}
             onClick={() => onMove(direction)}
-            className="bg-[#8f7a66] text-white w-12 h-12 rounded-lg font-bold text-xl hover:bg-[#9f8a76] transition-colors flex items-center justify-center"
+            className="bg-[#8f7a66] text-white w-10 h-10 rounded-lg font-bold text-lg hover:bg-[#9f8a76] transition-colors flex items-center justify-center"
             title={`Move ${label}`}
           >
             {icon}
@@ -29,10 +29,9 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
         ))}
       </div>
 
-      <div className="text-center mt-4 text-sm text-[#776e65]">
+      <div className="text-center text-xs text-[#776e65]">
         <p>
-          <strong>HOW TO PLAY:</strong> Use arrow keys or WASD keys to move the
-          tiles. When two tiles with the same number touch, they merge into one!
+          <strong>HOW TO PLAY:</strong> Move tiles to merge same numbers and reach 2048!
         </p>
       </div>
     </div>

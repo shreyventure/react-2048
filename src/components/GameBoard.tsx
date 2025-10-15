@@ -8,25 +8,26 @@ interface GameBoardProps {
 const GameBoard = ({ grid, size }: GameBoardProps) => {
 
   const getTileSize = () => {
-    const baseSize = 500;
-    const containerSize = Math.min(baseSize, window.innerWidth - 80);
-    const padding = 15;
+    // Smaller base size to fit in viewport
+    const baseSize = 350;
+    const containerSize = Math.min(baseSize, window.innerWidth - 60, window.innerHeight - 250);
+    const padding = 12;
     const totalPadding = padding * (size + 1);
     return Math.floor((containerSize - totalPadding) / size);
   };
 
   const tileSize = getTileSize();
-  const gap = 15;
+  const gap = 12;
   const boardSize = size * tileSize + (size - 1) * gap;
 
   return (
-    <div className="flex justify-center mb-8">
+    <div className="flex justify-center">
       {/* Background Grid */}
       <div
-        className="relative bg-[#bbada0] rounded-xl p-4 shadow-lg"
+        className="relative bg-[#bbada0] rounded-xl p-3 shadow-lg"
         style={{
-          width: boardSize + 30,
-          height: boardSize + 30,
+          width: boardSize + 24,
+          height: boardSize + 24,
         }}
       >
         {/* Grid cells background */}
@@ -50,7 +51,7 @@ const GameBoard = ({ grid, size }: GameBoardProps) => {
         </div>
 
         {/* Animated Tiles */}
-        <div className="absolute top-4 left-4 w-full h-full">
+        <div className="absolute top-3 left-3 w-full h-full">
           {grid.map((row, rowIndex) =>
             row.map((value, colIndex) => {
               if (value === 0) return null;

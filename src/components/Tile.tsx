@@ -10,15 +10,16 @@ interface TileProps {
 
 const AnimatedTile = memo(({ value, row, col, size }: TileProps) => {
   const getTileSize = () => {
-    const baseSize = 500;
-    const containerSize = Math.min(baseSize, window.innerWidth - 80);
-    const padding = 15;
+    // Same calculation as GameBoard
+    const baseSize = 350;
+    const containerSize = Math.min(baseSize, window.innerWidth - 60, window.innerHeight - 250);
+    const padding = 12;
     const totalPadding = padding * (size + 1);
     return Math.floor((containerSize - totalPadding) / size);
   };
 
   const tileSize = getTileSize();
-  const gap = 15;
+  const gap = 12;
 
   const x = col * (tileSize + gap);
   const y = row * (tileSize + gap);

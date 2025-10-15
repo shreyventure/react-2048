@@ -8,7 +8,7 @@ const HelpButton = () => {
     <>
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed top-4 right-4 bg-[#8f7a66] text-white p-3 rounded-full shadow-lg hover:bg-[#9f8a76] transition-colors z-10 flex items-center justify-center"
+        className="bg-[#8f7a66] text-white p-1 rounded-full shadow-lg hover:bg-[#9f8a76] transition-colors z-10 flex items-center justify-center"
         title="Help & Tips"
       >
         <svg
