@@ -15,7 +15,7 @@ const useGameBoard = () => {
 
   const move = (direction: string) => {
     console.log("moving:", direction);
-
+    let addScore = 0
     setGrid((prevGrid) => {
       let terminationState = isGameTerminated(prevGrid);
       console.log("Termination State:", terminationState);
@@ -30,8 +30,9 @@ const useGameBoard = () => {
         direction,
         prevGrid.length
       );
-      console.log("Current Score:", currentScore);
-      setScore((prevScore) => prevScore + (currentScore ?? 0));
+      console.log("Current Score:", score, "add score:", currentScore);
+      console.log("Add Score:", currentScore);
+      addScore = currentScore
       console.log("New Grid:");
       console.table(newGrid);
       if (gameOver) {
@@ -44,6 +45,8 @@ const useGameBoard = () => {
       }
       return newGrid;
     });
+
+    setScore(prevScore => prevScore + addScore);
   };
 
   const restartGame = () => {
