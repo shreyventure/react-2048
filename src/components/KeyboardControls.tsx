@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 interface KeyboardControlsProps {
   onMove: (direction: string) => void;
 }
@@ -20,16 +18,14 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
       
       <div className="flex justify-center gap-2">
         {controls.map(({ direction, icon, label }) => (
-          <motion.button
+          <button
             key={direction}
             onClick={() => onMove(direction)}
             className="bg-[#8f7a66] text-white w-12 h-12 rounded-lg font-bold text-xl hover:bg-[#9f8a76] transition-colors flex items-center justify-center"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             title={`Move ${label}`}
           >
             {icon}
-          </motion.button>
+          </button>
         ))}
       </div>
       
