@@ -62,17 +62,17 @@ const useGameBoard = () => {
     const handleKey = (e: KeyboardEvent) => {
       if (gameTerminated) return;
 
-      // Only handle arrow keys and prevent default only for them
-      if (e.key === "ArrowUp") {
+      // Handle both arrow keys and WASD keys
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
         e.preventDefault();
         move("up");
-      } else if (e.key === "ArrowDown") {
+      } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
         e.preventDefault();
         move("down");
-      } else if (e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
         e.preventDefault();
         move("left");
-      } else if (e.key === "ArrowRight") {
+      } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
         e.preventDefault();
         move("right");
       }

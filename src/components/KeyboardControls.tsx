@@ -4,18 +4,18 @@ interface KeyboardControlsProps {
 
 const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
   const controls = [
-    { direction: 'up', icon: '↑', label: 'Up' },
-    { direction: 'down', icon: '↓', label: 'Down' },
-    { direction: 'left', icon: '←', label: 'Left' },
-    { direction: 'right', icon: '→', label: 'Right' },
+    { direction: "up", icon: "↑", label: "Up" },
+    { direction: "down", icon: "↓", label: "Down" },
+    { direction: "left", icon: "←", label: "Left" },
+    { direction: "right", icon: "→", label: "Right" },
   ];
 
   return (
     <div className="mt-6">
       <p className="text-center text-[#776e65] mb-4 font-medium">
-        Use arrow keys or click the buttons below
+        Use arrow keys, WASD keys, or click the buttons below
       </p>
-      
+
       <div className="flex justify-center gap-2">
         {controls.map(({ direction, icon, label }) => (
           <button
@@ -28,9 +28,12 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
           </button>
         ))}
       </div>
-      
+
       <div className="text-center mt-4 text-sm text-[#776e65]">
-        <p><strong>HOW TO PLAY:</strong> Use your arrow keys to move the tiles. When two tiles with the same number touch, they merge into one!</p>
+        <p>
+          <strong>HOW TO PLAY:</strong> Use arrow keys or WASD keys to move the
+          tiles. When two tiles with the same number touch, they merge into one!
+        </p>
       </div>
     </div>
   );
