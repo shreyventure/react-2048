@@ -1,7 +1,9 @@
 import { useEffect, useRef, useCallback } from "react";
+import { DIRECTIONS } from "../constants/game";
+import type { Direction } from "../types/game";
 
 interface SwipeGesturesProps {
-  onSwipe: (direction: string) => void;
+  onSwipe: (direction: Direction) => void;
   threshold?: number;
 }
 
@@ -40,15 +42,15 @@ export const useSwipeGestures = ({
     // Determine if horizontal or vertical swipe is more significant
     if (Math.abs(distanceX) > Math.abs(distanceY)) {
       if (isLeftSwipe) {
-        onSwipe("left");
+        onSwipe(DIRECTIONS.LEFT);
       } else if (isRightSwipe) {
-        onSwipe("right");
+        onSwipe(DIRECTIONS.RIGHT);
       }
     } else {
       if (isUpSwipe) {
-        onSwipe("up");
+        onSwipe(DIRECTIONS.UP);
       } else if (isDownSwipe) {
-        onSwipe("down");
+        onSwipe(DIRECTIONS.DOWN);
       }
     }
   }, [onSwipe, threshold]);

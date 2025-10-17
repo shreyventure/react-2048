@@ -8,48 +8,48 @@ import GameControls from "./components/GameControls";
 import KeyboardControls from "./components/KeyboardControls";
 import HelpButton from "./components/HelpButton";
 import useGameBoard from "./hooks/useGameBoard";
+import { StorageService } from "./services/storageService";
+import { THEME_COLORS, GAME_CONFIG } from "./constants/game";
 
 function App() {
-  const { size, setSize, grid, score, gameTerminated, won, restartGame, move } =
-    useGameBoard();
-
+  const gameBoard = useGameBoard();
+  const storageService = StorageService.getInstance();
+  
   const [showGameEndScreen, setShowGameEndScreen] = useState(false);
   const [wonShow, setWonShow] = useState(false);
-  const [bestScore, setBestScore] = useState(() => {
-    const saved = localStorage.getItem("2048-best-score");
-    return saved ? parseInt(saved) : 0;
-  });
+  const [bestScore, setBestScore] = useState(() => storageService.getBestScore());
 
   useEffect(() => {
-    if (gameTerminated) {
+    if (gameBoard.isGameOver) {
       setShowGameEndScreen(true);
     }
-  }, [gameTerminated]);
+  }, [gameBoard.isGameOver]);
 
   useEffect(() => {
-    if (won && !wonShow) {
+    if (gameBoard.hasWon && !wonShow) {
       setShowGameEndScreen(true);
       setWonShow(true);
     }
-  }, [won]);
+  }, [gameBoard.hasWon, wonShow]);
 
   useEffect(() => {
-    if (score > bestScore) {
-      setBestScore(score);
-      localStorage.setItem("2048-best-score", score.toString());
+    if (gameBoard.score > bestScore) {
+      setBestScore(gameBoard.score);
+      storageService.setBestScore(gameBoard.score);
     }
-  }, [score, bestScore]);
+  }, [gameBoard.score, bestScore, storageService]);
 
   return (
-    <div className="h-screen bg-[#faf8ef] py-3 px-4 relative overflow-hidden">
-      {/* <HelpButton /> */}
-
+    <div 
+      className="h-screen py-3 px-4 relative overflow-hidden"
+      style={{ backgroundColor: THEME_COLORS.background }}
+    >
       {showGameEndScreen && (
         <GameEndScreen
-          terminated={gameTerminated}
-          won={won}
+          terminated={gameBoard.isGameOver}
+          won={gameBoard.hasWon}
           onClose={() => setShowGameEndScreen(false)}
-          restartGame={restartGame}
+          restartGame={gameBoard.restartGame}
         />
       )}
 
@@ -63,43 +63,43 @@ function App() {
         <div className="flex items-center justify-between mb-3 gap-2 flex-shrink-0">
           <div className="flex items-center justify-between gap-2">
             <motion.h1
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#776e65] m-0"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold m-0"
+              style={{ color: THEME_COLORS.textPrimary }}
               initial={{ scale: 0.5 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              >
-
-              2048 
+            >
+              {GAME_CONFIG.WINNING_TILE}
             </motion.h1>
             <HelpButton />
           </div>
-          <ScoreBoard score={score} bestScore={bestScore} />
+          <ScoreBoard score={gameBoard.score} bestScore={bestScore} />
         </div>
 
         {/* Game Controls */}
         <div className="mb-3 flex-shrink-0">
           <GameControls
-            onRestart={restartGame}
-            size={size}
-            onSizeChange={setSize}
+            onRestart={gameBoard.restartGame}
+            size={gameBoard.size}
+            onSizeChange={gameBoard.changeSize}
           />
         </div>
 
         {/* Game Board - Takes remaining space */}
         <div className="flex-1 flex items-center justify-center min-h-0">
           <motion.div
-            key={size} // Re-animate when size changes
+            key={gameBoard.size} // Re-animate when size changes
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <GameBoard grid={grid} size={size} />
+            <GameBoard grid={gameBoard.grid} size={gameBoard.size} />
           </motion.div>
         </div>
 
         {/* Keyboard Controls */}
         <div className="flex-shrink-0">
-          <KeyboardControls onMove={move} />
+          <KeyboardControls onMove={gameBoard.move} />
         </div>
       </motion.div>
     </div>

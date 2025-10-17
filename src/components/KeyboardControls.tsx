@@ -1,18 +1,24 @@
+import { DIRECTIONS, THEME_COLORS, GAME_CONFIG } from '../constants/game';
+import type { Direction } from '../types/game';
+
 interface KeyboardControlsProps {
-  onMove: (direction: string) => void;
+  onMove: (direction: Direction) => void;
 }
 
 const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
   const controls = [
-    { direction: "up", icon: "↑", label: "Up" },
-    { direction: "down", icon: "↓", label: "Down" },
-    { direction: "left", icon: "←", label: "Left" },
-    { direction: "right", icon: "→", label: "Right" },
+    { direction: DIRECTIONS.UP as Direction, icon: "↑", label: "Up" },
+    { direction: DIRECTIONS.DOWN as Direction, icon: "↓", label: "Down" },
+    { direction: DIRECTIONS.LEFT as Direction, icon: "←", label: "Left" },
+    { direction: DIRECTIONS.RIGHT as Direction, icon: "→", label: "Right" },
   ];
 
   return (
     <div className="mt-2">
-      <p className="text-center text-[#776e65] mb-2 font-medium text-sm">
+      <p 
+        className="text-center mb-2 font-medium text-sm"
+        style={{ color: THEME_COLORS.textPrimary }}
+      >
         Use arrow keys, WASD keys, or click buttons
       </p>
 
@@ -21,7 +27,16 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
           <button
             key={direction}
             onClick={() => onMove(direction)}
-            className="bg-[#8f7a66] text-white w-10 h-10 rounded-lg font-bold text-lg hover:bg-[#9f8a76] transition-colors flex items-center justify-center"
+            className="text-white w-10 h-10 rounded-lg font-bold text-lg transition-colors flex items-center justify-center"
+            style={{ 
+              backgroundColor: THEME_COLORS.buttonPrimary,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = THEME_COLORS.buttonHover;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = THEME_COLORS.buttonPrimary;
+            }}
             title={`Move ${label}`}
           >
             {icon}
@@ -29,9 +44,9 @@ const KeyboardControls = ({ onMove }: KeyboardControlsProps) => {
         ))}
       </div>
 
-      <div className="text-center text-xs text-[#776e65]">
+      <div className="text-center text-xs" style={{ color: THEME_COLORS.textPrimary }}>
         <p>
-          <strong>HOW TO PLAY:</strong> Move tiles to merge same numbers and reach 2048!
+          <strong>HOW TO PLAY:</strong> Move tiles to merge same numbers and reach {GAME_CONFIG.WINNING_TILE}!
         </p>
       </div>
     </div>

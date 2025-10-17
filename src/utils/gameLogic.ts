@@ -1,13 +1,5 @@
-export interface TileData {
-  id: string;
-  value: number;
-  row: number;
-  col: number;
-  isNew?: boolean;
-  isMerged?: boolean;
-  previousRow?: number;
-  previousCol?: number;
-}
+import { GAME_CONFIG, DIRECTIONS } from '../constants/game';
+import type { Direction, GameMove } from '../types/game';
 
 export const createTestGrid = (size: number): number[][] => {
   let grid = Array.from({ length: size }, () => Array(size).fill(0));
@@ -44,7 +36,9 @@ export const spawnTile = (
   const randomIndex = Math.floor(Math.random() * emptyCells.length);
   const [row, col] = emptyCells[randomIndex];
 
-  const newValue = Math.random() < 0.9 ? 2 : 4;
+  const newValue = Math.random() < GAME_CONFIG.NEW_TILE_PROBABILITY 
+    ? GAME_CONFIG.NEW_TILE_VALUES[0] 
+    : GAME_CONFIG.NEW_TILE_VALUES[1];
 
   const newGrid = grid.map((rowArr, r) =>
     rowArr.map((cell, c) => (r === row && c === col ? newValue : cell))
@@ -55,23 +49,23 @@ export const spawnTile = (
   return { newGrid, gameOver: terminated, won };
 };
 
-const getVector = (direction: string) => {
+const getVector = (direction: Direction) => {
   // Vectors representing tile movement
   switch (direction) {
-    case "up":
+    case DIRECTIONS.UP:
       return { x: 0, y: -1 };
-    case "right":
+    case DIRECTIONS.RIGHT:
       return { x: 1, y: 0 };
-    case "down":
+    case DIRECTIONS.DOWN:
       return { x: 0, y: 1 };
-    case "left":
+    case DIRECTIONS.LEFT:
       return { x: -1, y: 0 };
     default:
       return { x: 0, y: 0 };
   }
 };
 
-export function updateGrid(grid: number[][], direction: string, size: number) {
+export function updateGrid(grid: number[][], direction: Direction, size: number): GameMove {
   let score = 0;
   console.log("Updating table:");
   console.table(grid);
@@ -87,8 +81,8 @@ export function updateGrid(grid: number[][], direction: string, size: number) {
   const rows = [...Array(size).keys()];
   const cols = [...Array(size).keys()];
 
-  if (direction === "right") cols.reverse();
-  if (direction === "down") rows.reverse();
+  if (direction === DIRECTIONS.RIGHT) cols.reverse();
+  if (direction === DIRECTIONS.DOWN) rows.reverse();
 
   for (let r of rows) {
     for (let c of cols) {
@@ -134,13 +128,23 @@ export function updateGrid(grid: number[][], direction: string, size: number) {
     }
   }
 
-  console.log("Score:", score);
   if (moved) {
-    console.table(newGrid);
     const { newGrid: withNewTile, gameOver, won } = spawnTile(newGrid);
-    return { newGrid: withNewTile, gameOver, won, currentScore: score };
+    return { 
+      direction, 
+      newGrid: withNewTile, 
+      gameOver, 
+      won, 
+      score 
+    };
   }
-  return { newGrid, gameOver: false, won: false, currentScore: score };
+  return { 
+    direction, 
+    newGrid, 
+    gameOver: false, 
+    won: false, 
+    score 
+  };
 }
 
 export const isGameTerminated = (
@@ -150,10 +154,10 @@ export const isGameTerminated = (
   let won = false;
   let hasEmpty = false;
 
-  // Check for 2048 and empty cells
+  // Check for winning tile and empty cells
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      if (grid[r][c] === 2048) {
+      if (grid[r][c] === GAME_CONFIG.WINNING_TILE) {
         won = true;
       }
       if (grid[r][c] === 0) {
