@@ -1,11 +1,69 @@
+import { useState, useEffect } from 'react';
 import AnimatedTile from './Tile';
+
+interface TileData {
+  id: string;
+  value: number;
+  row: number;
+  col: number;
+}
 
 interface GameBoardProps {
   grid: number[][];
   size: number;
 }
 
+// Simple tile registry for stable IDs
+const tileRegistry = new Map<string, string>();
+let tileIdCounter = 0;
+
 const GameBoard = ({ grid, size }: GameBoardProps) => {
+  const [tiles, setTiles] = useState<TileData[]>([]);
+
+  // Update tiles when grid changes
+  useEffect(() => {
+    const newTiles: TileData[] = [];
+    const currentPositions = new Set<string>();
+
+    // Collect current positions
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+        if (grid[row][col] !== 0) {
+          currentPositions.add(`${row}-${col}`);
+        }
+      }
+    }
+
+    // Create tiles with stable IDs
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+        if (grid[row][col] !== 0) {
+          const posKey = `${row}-${col}`;
+          
+          // Get or create stable ID for this position
+          if (!tileRegistry.has(posKey)) {
+            tileRegistry.set(posKey, `tile-${tileIdCounter++}`);
+          }
+
+          newTiles.push({
+            id: tileRegistry.get(posKey)!,
+            value: grid[row][col],
+            row,
+            col,
+          });
+        }
+      }
+    }
+
+    // Clean up unused positions
+    for (const [posKey] of tileRegistry) {
+      if (!currentPositions.has(posKey)) {
+        tileRegistry.delete(posKey);
+      }
+    }
+
+    setTiles(newTiles);
+  }, [grid]);
 
   const getTileSize = () => {
     // Smaller base size to fit in viewport
@@ -52,21 +110,16 @@ const GameBoard = ({ grid, size }: GameBoardProps) => {
 
         {/* Animated Tiles */}
         <div className="absolute top-3 left-3 w-full h-full">
-          {grid.map((row, rowIndex) =>
-            row.map((value, colIndex) => {
-              if (value === 0) return null;
-              return (
-                <AnimatedTile
-                  key={`${rowIndex}-${colIndex}`}
-                  id={`${rowIndex}-${colIndex}`}
-                  value={value}
-                  row={rowIndex}
-                  col={colIndex}
-                  size={size}
-                />
-              );
-            })
-          )}
+          {tiles.map((tile) => (
+            <AnimatedTile
+              key={tile.id}
+              id={tile.id}
+              value={tile.value}
+              row={tile.row}
+              col={tile.col}
+              size={size}
+            />
+          ))}
         </div>
 
 

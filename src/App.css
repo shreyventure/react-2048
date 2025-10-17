@@ -139,11 +139,67 @@ select:focus-visible {
   }
 }
 
+/* Tile animations */
+.tile-appear {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.tile-appear-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.tile-enter {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.tile-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.tile-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tile-exit-active {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.15s ease-in, transform 0.15s ease-in;
+}
+
+.tile-merged {
+  animation: tile-merge 0.3s ease-out;
+}
+
+@keyframes tile-merge {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .tile-appear-active,
+  .tile-enter-active,
+  .tile-exit-active {
     transition-duration: 0.01ms !important;
   }
 }

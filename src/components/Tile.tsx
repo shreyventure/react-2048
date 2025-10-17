@@ -51,14 +51,17 @@ const AnimatedTile = memo(({ value, row, col, size }: TileProps) => {
 
   return (
     <div
-      className="absolute flex items-center justify-center font-bold rounded-lg select-none transition-all duration-500 ease-out"
+      className="tile absolute flex items-center justify-center font-bold rounded-lg select-none"
       style={{
         width: tileSize,
         height: tileSize,
         backgroundColor: bg,
         color: text,
         fontSize: getFontSize(),
-        transform: `translate(${x}px, ${y}px)`,
+        left: x,
+        top: y,
+        transition: 'all 0.3s ease-out',
+        zIndex: 10,
       }}
     >
       {value}
